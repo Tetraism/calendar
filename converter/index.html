@@ -199,13 +199,13 @@
 
                 <div class="flex gap-2 mb-3">
                     <div class="flex-1">
-                        <label class="text-[10px] text-slate-400 font-bold block mb-1">יום (1-30)</label>
-                        <input id="tDateDay" type="number" min="1" max="30" placeholder="1" oninput="convertTetraDateToGreg()"
+                        <label class="text-[10px] text-slate-400 font-bold block mb-1">יום (1-36)</label>
+                        <input id="tDateDay" type="number" min="1" max="36" placeholder="1" oninput="convertTetraDateToGreg()"
                             class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold text-center outline-none transition-all">
                     </div>
                     <div class="flex-1">
-                        <label class="text-[10px] text-slate-400 font-bold block mb-1">חודש (1-12)</label>
-                        <input id="tDateMonth" type="number" min="1" max="12" placeholder="1" oninput="convertTetraDateToGreg()"
+                        <label class="text-[10px] text-slate-400 font-bold block mb-1">חודש (1-10)</label>
+                        <input id="tDateMonth" type="number" min="1" max="10" placeholder="1" oninput="convertTetraDateToGreg()"
                             class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold text-center outline-none transition-all">
                     </div>
                     <div class="flex-1">
@@ -259,7 +259,7 @@
     <script>
         const CONFIG = {
             epoch: { gY: 0, gM: 1, gD: 1, tY: 10000, tM: 1, tD: 1 },
-            tetraMonths: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שביעי", "שמיני", "תשיעי", "עשירי", "אחד-עשר", "שנים-עשר"],
+            tetraMonths: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שביעי", "שמיני", "תשיעי", "עשירי"],
             gregMonths: ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"]
         };
 
@@ -296,7 +296,7 @@
         function convertToTetra(date) {
             const targetAbs = getAbsoluteDays(date.getDate(), date.getMonth() + 1, date.getFullYear());
             const syncAbs = getAbsoluteDays(CONFIG.epoch.gD, CONFIG.epoch.gM, CONFIG.epoch.gY);
-            let diff = (targetAbs - syncAbs) + ((CONFIG.epoch.tM - 1) * 30) + (CONFIG.epoch.tD - 1);
+            let diff = (targetAbs - syncAbs) + ((CONFIG.epoch.tM - 1) * 36) + (CONFIG.epoch.tD - 1);
             let y = CONFIG.epoch.tY;
             if (diff >= 0) {
                 while (true) {
@@ -307,8 +307,8 @@
                 while (diff < 0) { y--; diff += (isLeapYear(y) ? 366 : 365); }
             }
             if (diff < 360) {
-                const mIdx = Math.floor(diff / 30);
-                const d = (diff % 30) + 1;
+                const mIdx = Math.floor(diff / 36);
+                const d = (diff % 36) + 1;
                 return `${d} ב${CONFIG.tetraMonths[mIdx]}, ${y}`;
             }
             const extraIdx = diff - 360;
@@ -553,7 +553,7 @@
             const el = document.getElementById('dateConvertResult');
 
             if (isNaN(tDay) || isNaN(tMonth) || isNaN(tYear)) { el.innerText = 'הכנס תאריך'; return; }
-            if (tMonth < 1 || tMonth > 12 || tDay < 1 || tDay > 30) { el.innerText = 'תאריך לא תקין'; return; }
+            if (tMonth < 1 || tMonth > 10 || tDay < 1 || tDay > 36) { el.innerText = 'תאריך לא תקין'; return; }
 
             // חשב מספר ימים מאז ה-epoch (1 בינואר 0 = יום 0 בטטרה 10000)
             const epochTetraAbs = getAbsoluteDays(CONFIG.epoch.gD, CONFIG.epoch.gM, CONFIG.epoch.gY);
@@ -568,9 +568,9 @@
                 while (y > tYear) { y--; daysDiff -= isLeapYear(y) ? 366 : 365; }
             }
             // להוסיף ימים בתוך השנה (חודשים מלאים + יום)
-            daysDiff += (tMonth - 1) * 30 + (tDay - 1);
+            daysDiff += (tMonth - 1) * 36 + (tDay - 1);
             // להחסיר את ה-offset של ה-epoch הטטרה (epoch.tM=1, epoch.tD=1 = offset 0)
-            daysDiff -= ((CONFIG.epoch.tM - 1) * 30 + (CONFIG.epoch.tD - 1));
+            daysDiff -= ((CONFIG.epoch.tM - 1) * 36 + (CONFIG.epoch.tD - 1));
 
             // תאריך גרגוריאני מתוך julianDay
             const julianDay = epochTetraAbs + daysDiff;
