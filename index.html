@@ -1561,6 +1561,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         </div>
     </div>
 
+    <script src="logic.js"></script>
     <script>
         // ברירות מחדל - סנכרון שנת 0 לועזית ל-10,000 עשרונית
         const DEFAULTS = {
@@ -1582,22 +1583,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         let currentYear = 0;
         let selectedDateKey = "";
 
-        // פונקציית עזר לחישוב ימים שעברו מתאריך 0 (כולל שנים לפני הספירה)
-        function getAbsoluteDays(d, m, y) {
-            let year = y;
-            let month = m;
-            if (month <= 2) {
-                year--;
-                month += 12;
-            }
-            // נוסחת חישוב ימים אבסולוטיים (Fliegel-Van Flandern)
-            return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + d - 1524.5;
-        }
 
-        function isLeapYear(y) {
-            const gregYear = y - 10000;
-            return (gregYear % 4 === 0 && gregYear % 100 !== 0) || (gregYear % 400 === 0);
-        }
 
         function getTetraTodayInfo() {
             const now = new Date();
