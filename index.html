@@ -776,8 +776,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 <div id="daySettings" class="grid grid-cols-2 gap-2" dir="rtl"><input type="text" value="1" onchange="updateDayConfig(0, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="2" onchange="updateDayConfig(1, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="3" onchange="updateDayConfig(2, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="4" onchange="updateDayConfig(3, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="5" onchange="updateDayConfig(4, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="6" onchange="updateDayConfig(5, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="7" onchange="updateDayConfig(6, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="8" onchange="updateDayConfig(7, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="9" onchange="updateDayConfig(8, this.value)" class="p-1 border rounded text-xs text-center"><input type="text" value="10" onchange="updateDayConfig(9, this.value)" class="p-1 border rounded text-xs text-center"></div>
             </div>
             <div>
-                <label class="block text-sm font-bold mb-2 text-right">שמות חודשים (1-10)</label>
-                <div id="monthSettings" class="space-y-2 h-32 overflow-y-auto pr-2 border rounded p-2 text-right" dir="rtl"><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">1</span><input type="text" value="ראשון" onchange="updateMonthConfig(0, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">2</span><input type="text" value="שני" onchange="updateMonthConfig(1, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">3</span><input type="text" value="שלישי" onchange="updateMonthConfig(2, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">4</span><input type="text" value="רביעי" onchange="updateMonthConfig(3, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">5</span><input type="text" value="חמישי" onchange="updateMonthConfig(4, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">6</span><input type="text" value="שישי" onchange="updateMonthConfig(5, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">7</span><input type="text" value="שביעי" onchange="updateMonthConfig(6, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">8</span><input type="text" value="שמיני" onchange="updateMonthConfig(7, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">9</span><input type="text" value="תשיעי" onchange="updateMonthConfig(8, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">10</span><input type="text" value="עשירי" onchange="updateMonthConfig(9, this.value)" class="w-full p-1 border rounded text-sm text-right"></div></div>
+                <label class="block text-sm font-bold mb-2 text-right">שמות חודשים (1-12)</label>
+                <div id="monthSettings" class="space-y-2 h-32 overflow-y-auto pr-2 border rounded p-2 text-right" dir="rtl"><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">1</span><input type="text" value="ראשון" onchange="updateMonthConfig(0, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">2</span><input type="text" value="שני" onchange="updateMonthConfig(1, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">3</span><input type="text" value="שלישי" onchange="updateMonthConfig(2, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">4</span><input type="text" value="רביעי" onchange="updateMonthConfig(3, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">5</span><input type="text" value="חמישי" onchange="updateMonthConfig(4, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">6</span><input type="text" value="שישי" onchange="updateMonthConfig(5, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">7</span><input type="text" value="שביעי" onchange="updateMonthConfig(6, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">8</span><input type="text" value="שמיני" onchange="updateMonthConfig(7, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">9</span><input type="text" value="תשיעי" onchange="updateMonthConfig(8, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">10</span><input type="text" value="עשירי" onchange="updateMonthConfig(9, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">11</span><input type="text" value="אחד-עשר" onchange="updateMonthConfig(10, this.value)" class="w-full p-1 border rounded text-sm text-right"></div><div class="flex items-center gap-2"><span class="text-[10px] w-4 text-gray-400">12</span><input type="text" value="שנים-עשר" onchange="updateMonthConfig(11, this.value)" class="w-full p-1 border rounded text-sm text-right"></div></div>
             </div>
             
             <div class="pt-4 border-t space-y-3">
@@ -1568,7 +1568,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 gDay: 1, gMonth: 1, gYear: 0,
                 tDay: 1, tMonth: 1, tYear: 10000
             },
-            months: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שביעי", "שמיני", "תשיעי", "עשירי"],
+            months: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שביעי", "שמיני", "תשיעי", "עשירי", "אחד-עשר", "שנים-עשר"],
             days: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             holidays: [1, 5, 10]
         };
@@ -1607,7 +1607,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             const diffInDays = todayAbs - syncAbs;
             
             // המרה של תאריך הסנכרון העשרוני לימים אבסולוטיים בלוח הטטרה
-            let remainingDays = diffInDays + ((config.sync.tMonth - 1) * 36) + (config.sync.tDay - 1);
+            let remainingDays = diffInDays + ((config.sync.tMonth - 1) * 30) + (config.sync.tDay - 1);
             let year = config.sync.tYear;
 
             if (remainingDays >= 0) {
@@ -1628,8 +1628,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             }
 
             if (remainingDays < 360) {
-                const mIdx = Math.floor(remainingDays / 36);
-                const d = (remainingDays % 36) + 1;
+                const mIdx = Math.floor(remainingDays / 30);
+                const d = (remainingDays % 30) + 1;
                 return { key: `${year}-${mIdx}-${d}`, day: d, month: config.months[mIdx], year, isExtra: false };
             }
             const extraIdx = remainingDays - 360;
@@ -1763,7 +1763,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 });
                 html += `</div><div class="calendar-grid">`;
                 
-                for (let d = 1; d <= 36; d++) {
+                for (let d = 1; d <= 30; d++) {
                     const key = `${currentYear}-${mIdx}-${d}`;
                     const isToday = key === todayKey;
                     const dayOfWeek = ((d - 1) % 10) + 1;
