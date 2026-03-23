@@ -4,7 +4,35 @@
  *
  * All functions are pure: no DOM access, no config assumptions.
  * Callers are responsible for passing the right epoch/config values.
+ *
+ * Static data (months, epoch, holidays…) lives in logic.json.
+ * Call loadTetraConfig() once at startup; all data is available
+ * on the resolved object and cached in window.TETRA_CONFIG.
  */
+
+/* ─── Static data loader ─────────────────────────────────────────── */
+
+/**
+ * Fetches logic.json and caches the result in window.TETRA_CONFIG.
+ * Returns a Promise that resolves to the config object.
+ * Safe to call multiple times — subsequent calls return the cache.
+ *
+ * @returns {Promise<Object>}
+ */
+function loadTetraConfig() {
+    if (window.TETRA_CONFIG) return Promise.resolve(window.TETRA_CONFIG);
+    return fetch('logic.json')
+        .then(r => {
+            if (!r.ok) throw new Error(`logic.json not found (${r.status})`);
+            return r.json();
+        })
+        .then(data => {
+            window.TETRA_CONFIG = data;
+            return data;
+        });
+}
+
+/* ─── Pure date / time functions ─────────────────────────────────── */
 
 /**
  * Returns the Julian Day Number for a Gregorian date.
