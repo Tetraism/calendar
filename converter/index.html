@@ -6,6 +6,10 @@
     <title>מערכת זמן טטראיסטית - לוח שנה ומחסן</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700;800&display=swap" rel="stylesheet">
+
+    <!-- ★ כל הלוגיקה והנתונים נטענים מ-logic.js ו-logic.json בלבד -->
+    <script src="../logic.js"></script>
+
     <style>
         body {
             font-family: 'Assistant', sans-serif;
@@ -41,7 +45,7 @@
         .calendar-day.other-month { opacity: 0.2; }
 
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        
+
         #nameModal {
             display: none;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -54,48 +58,25 @@
             animation: slideIn 0.3s ease-out;
         }
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-
-        #downloadAppBtn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 50;
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 12px;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #4f46e5;
-        }
-        #downloadAppBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            background: #f8fafc;
-        }
     </style>
 </head>
 <body>
 
     <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <!-- צד ימין: לוח שנה וממיר -->
+
+        <!-- צד ימין: לוח שנה -->
         <div class="space-y-4">
             <div class="glass-panel rounded-[2rem] p-6 border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
                     <button onclick="changeMonth(-1)" class="p-2 hover:bg-slate-100 rounded-full">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </button>
-                    <h2 id="calendarTitle" class="text-lg font-black text-slate-800">ינואר 2024</h2>
+                    <h2 id="calendarTitle" class="text-lg font-black text-slate-800">טוען...</h2>
                     <button onclick="changeMonth(1)" class="p-2 hover:bg-slate-100 rounded-full">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                     </button>
                 </div>
-                
+
                 <div class="calendar-grid mb-2 text-center text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
                     <div>א</div><div>ב</div><div>ג</div><div>ד</div><div>ה</div><div>ו</div><div>ש</div>
                 </div>
@@ -104,12 +85,13 @@
                 <!-- בחירת תאריך מהירה -->
                 <div class="mt-4">
                     <label class="text-[10px] text-slate-400 font-bold mb-1 block uppercase">בחירה מהירה:</label>
-                    <input type="date" id="datePicker" onchange="handlePickerChange(this.value)" class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold transition-all outline-none text-slate-700">
+                    <input type="date" id="datePicker" onchange="handlePickerChange(this.value)"
+                        class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold transition-all outline-none text-slate-700">
                 </div>
-                
+
                 <div class="mt-6 pt-6 border-t border-slate-100 space-y-4">
                     <div class="bg-slate-900 rounded-2xl p-4 text-center">
-                        <div id="selectedDateLabel" class="text-[10px] text-slate-400 uppercase mb-1">תאריך נבחר (טטראיסטי)</div>
+                        <div class="text-[10px] text-slate-400 uppercase mb-1">תאריך נבחר (טטראיסטי)</div>
                         <div id="tetraResultDisplay" class="text-xl font-black text-indigo-400">בחר תאריך</div>
                     </div>
                     <button id="saveBtn" onclick="openSaveModal()" disabled
@@ -120,21 +102,21 @@
             </div>
         </div>
 
-        <!-- צד שמאל: ממירים + מחסן תאריכים -->
+        <!-- צד שמאל: ממירים + מחסן -->
         <div class="space-y-4 flex flex-col h-full">
 
-            <!-- ממיר שעה -->
+            <!-- ממיר שעות -->
             <div class="glass-panel rounded-[2rem] p-6 border border-slate-200">
                 <h3 class="text-lg font-black text-slate-800 mb-1">🕐 ממיר שעות</h3>
-                <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">מערכת טטראיסטית: 10 שעות · 100 דקות · 100 שניות</p>
+                <!-- תיאור המערכת נטען דינמית מ-cfg.time -->
+                <p id="timeSystemDesc" class="text-[10px] text-slate-400 uppercase font-bold mb-4">טוען...</p>
 
-                <!-- כרטיסיות -->
                 <div class="flex bg-slate-100 rounded-2xl p-1 mb-4">
                     <button onclick="setTimeTab('toTetra')" id="tabToTetra" class="flex-1 py-2 rounded-xl text-sm font-bold transition-all bg-white text-indigo-600 shadow-sm">רגיל → טטרה</button>
-                    <button onclick="setTimeTab('toGreg')" id="tabToGreg" class="flex-1 py-2 rounded-xl text-sm font-bold transition-all text-slate-400">טטרה → רגיל</button>
+                    <button onclick="setTimeTab('toGreg')"  id="tabToGreg"  class="flex-1 py-2 rounded-xl text-sm font-bold transition-all text-slate-400">טטרה → רגיל</button>
                 </div>
 
-                <!-- טופס: רגיל לטטרה (גרגוריאני קלט) -->
+                <!-- קלט: רגיל → טטרה -->
                 <div id="formToTetra">
                     <div class="flex gap-2 items-center mb-3">
                         <div class="flex-1">
@@ -157,42 +139,40 @@
                     </div>
                 </div>
 
-                <!-- טופס: טטרה לרגיל (טטרה קלט) -->
+                <!-- קלט: טטרה → רגיל — תוויות ו-max נטענים דינמית מ-cfg.time -->
                 <div id="formToGreg" class="hidden">
                     <div class="flex gap-2 items-center mb-3">
                         <div class="flex-1">
-                            <label class="text-[10px] text-slate-400 font-bold block mb-1">שעה (0-9)</label>
-                            <input id="tetraHour" type="number" min="0" max="9" placeholder="00" oninput="convertTetraToGreg()"
+                            <label id="lblTetraHour" class="text-[10px] text-slate-400 font-bold block mb-1">שעה</label>
+                            <input id="tetraHour" type="number" min="0" placeholder="00" oninput="convertTetraToGreg()"
                                 class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold text-center outline-none transition-all">
                         </div>
                         <span class="text-slate-300 font-bold mt-5">:</span>
                         <div class="flex-1">
-                            <label class="text-[10px] text-slate-400 font-bold block mb-1">דקות (0-99)</label>
-                            <input id="tetraMin" type="number" min="0" max="99" placeholder="00" oninput="convertTetraToGreg()"
+                            <label id="lblTetraMin" class="text-[10px] text-slate-400 font-bold block mb-1">דקות</label>
+                            <input id="tetraMin" type="number" min="0" placeholder="00" oninput="convertTetraToGreg()"
                                 class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold text-center outline-none transition-all">
                         </div>
                         <span class="text-slate-300 font-bold mt-5">:</span>
                         <div class="flex-1">
-                            <label class="text-[10px] text-slate-400 font-bold block mb-1">שניות (0-99)</label>
-                            <input id="tetraSec" type="number" min="0" max="99" placeholder="00" oninput="convertTetraToGreg()"
+                            <label id="lblTetraSec" class="text-[10px] text-slate-400 font-bold block mb-1">שניות</label>
+                            <input id="tetraSec" type="number" min="0" placeholder="00" oninput="convertTetraToGreg()"
                                 class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold text-center outline-none transition-all">
                         </div>
                     </div>
                 </div>
 
-                <!-- תוצאה שעה -->
                 <div class="bg-slate-900 rounded-2xl p-4 text-center">
                     <div id="timeResultLabel" class="text-[10px] text-slate-400 uppercase mb-1">שעה טטראיסטית</div>
                     <div id="timeResult" class="text-xl font-black text-indigo-400">הכנס שעה</div>
                 </div>
 
-                <!-- שעה עכשיו -->
                 <button onclick="useCurrentTime()" class="mt-3 w-full py-3 bg-slate-100 text-slate-600 rounded-2xl font-bold text-sm hover:bg-indigo-50 hover:text-indigo-600 transition">
                     ⏱ השתמש בשעה הנוכחית
                 </button>
             </div>
 
-            <!-- ממיר תאריך טטרה ← גרגוריאני -->
+            <!-- ממיר תאריך טטרה → גרגוריאני -->
             <div class="glass-panel rounded-[2rem] p-6 border border-slate-200">
                 <h3 class="text-lg font-black text-slate-800 mb-1">📅 ממיר תאריך טטרה → רגיל</h3>
                 <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">הכנס תאריך טטראיסטי וקבל את המקבילה הגרגוריאנית</p>
@@ -209,8 +189,9 @@
                             class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold text-center outline-none transition-all">
                     </div>
                     <div class="flex-1">
+                        <!-- placeholder נטען דינמית מ-cfg.epoch.tY -->
                         <label class="text-[10px] text-slate-400 font-bold block mb-1">שנה</label>
-                        <input id="tDateYear" type="number" placeholder="10000" oninput="convertTetraDateToGreg()"
+                        <input id="tDateYear" type="number" placeholder="..." oninput="convertTetraDateToGreg()"
                             class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-indigo-400 rounded-2xl text-lg font-bold text-center outline-none transition-all">
                     </div>
                 </div>
@@ -221,18 +202,18 @@
                 </div>
             </div>
 
+            <!-- מחסן תאריכים -->
             <div class="glass-panel rounded-[2rem] p-6 border border-slate-200 flex-1 flex flex-col overflow-hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xl font-black text-slate-800">מחסן תאריכים</h3>
                     <button onclick="clearStorage()" class="text-xs text-red-500 hover:underline">מחק הכל</button>
                 </div>
-                <div id="storageList" class="space-y-3 overflow-y-auto flex-1 pr-2">
-                </div>
+                <div id="storageList" class="space-y-3 overflow-y-auto flex-1 pr-2"></div>
             </div>
         </div>
     </div>
 
-    <!-- Modal לשאילת שם -->
+    <!-- Modal שם -->
     <div id="nameModal">
         <div class="bg-white rounded-[2rem] p-8 w-80 shadow-2xl space-y-4 text-center mx-4">
             <div class="space-y-2">
@@ -242,12 +223,12 @@
                 <h3 class="text-xl font-black text-slate-800">מתן שם לתאריך</h3>
                 <p class="text-slate-500 text-xs">איך תרצה לתייג את התאריך השמור?</p>
             </div>
-            <input id="saveNameInput" type="text" placeholder="למשל: יום הולדת שלי" 
+            <input id="saveNameInput" type="text" placeholder="למשל: יום הולדת שלי"
                    class="w-full p-4 bg-slate-100 border-none rounded-2xl outline-none text-center font-bold text-slate-700 focus:ring-2 ring-indigo-500 transition">
             <div class="flex flex-col gap-2 pt-2">
-                <button onclick="confirmSave()" class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition">שמור</button>
-                <button onclick="confirmSave(true)" class="w-full py-3 bg-slate-100 text-slate-500 rounded-xl font-bold hover:bg-slate-200 transition">שמור ללא שם</button>
-                <button onclick="closeModal()" class="w-full py-2 text-slate-400 text-xs hover:underline mt-2">ביטול</button>
+                <button onclick="confirmSave()"       class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition">שמור</button>
+                <button onclick="confirmSave(true)"   class="w-full py-3 bg-slate-100 text-slate-500 rounded-xl font-bold hover:bg-slate-200 transition">שמור ללא שם</button>
+                <button onclick="closeModal()"        class="w-full py-2 text-slate-400 text-xs hover:underline mt-2">ביטול</button>
             </div>
         </div>
     </div>
@@ -257,127 +238,52 @@
     </div>
 
     <script>
-        // ===== INLINED LOGIC (previously logic.js + logic.json) =====
+        // =========================================================
+        // APP LOGIC — אין כאן נתונים מקודדים.
+        // כל קבועי המערכת (epoch, time, שמות חודשים, extraNames …)
+        // מגיעים מ-../logic.json דרך loadTetraConfig() שב-../logic.js.
+        // =========================================================
 
-        // --- Configuration (previously logic.json) ---
-        const cfg = {
-            epoch: {
-                // Gregorian sync date: 1 Jan 2000 = 1/1/10000 Tetraist
-                gD: 1, gM: 1, gY: 2000,
-                tD: 1, tM: 1, tY: 10000
-            },
-            time: {
-                tetraHoursPerDay:      10,
-                tetraMinutesPerHour:  100,
-                tetraSecondsPerMinute: 100
-            },
-            gregMonths: [
-                'ינואר','פברואר','מרץ','אפריל','מאי','יוני',
-                'יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'
-            ],
-            tetraMonths: [
-                'ראשון','שני','שלישי','רביעי','חמישי','שישי',
-                'שביעי','שמיני','תשיעי','עשירי','אחד עשר','שנים עשר'
-            ],
-            extraNames: ['אחד', 'שניים', 'שלושה', 'ארבעה', 'חמישה', 'שישה']
-        };
+        // Stubs — מוחלפים בפונקציות האמיתיות לאחר טעינת הקונפיגורציה
+        ;['useCurrentTime','changeMonth','handlePickerChange','openSaveModal',
+          'closeModal','confirmSave','clearStorage','copyToClipboard',
+          'deleteItem','setTimeTab','convertGregToTetra','convertTetraToGreg',
+          'convertTetraDateToGreg'
+        ].forEach(function(fn) {
+            window[fn] = function() { console.warn(fn + ' נקרא לפני שהקונפיגורציה נטענה'); };
+        });
 
-        // --- Math helpers (previously logic.js) ---
+        loadTetraConfig('../logic.json').then(function(cfg) {
 
-        function pad(n) {
-            return String(Math.floor(n)).padStart(2, '0');
-        }
+            // ── אתחול UI דינמי לפי cfg ──────────────────────────────────
 
-        function isLeapYear(y) {
-            // Tetraist leap year: same rule as Gregorian (divisible by 4, except centuries unless also div by 400)
-            return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
-        }
+            // תיאור מערכת השעות
+            document.getElementById('timeSystemDesc').innerText =
+                `מערכת טטראיסטית: ${cfg.time.tetraHoursPerDay} שעות · ` +
+                `${cfg.time.tetraMinutesPerHour} דקות · ` +
+                `${cfg.time.tetraSecondsPerMinute} שניות`;
 
-        // Returns absolute day count from a fixed epoch using the proleptic Gregorian calendar
-        function getAbsoluteDays(d, m, y) {
-            // Algorithm: count days from year 1
-            let Y = y - 1;
-            return (
-                365 * Y
-                + Math.floor(Y / 4)
-                - Math.floor(Y / 100)
-                + Math.floor(Y / 400)
-                + [0,31,59,90,120,151,181,212,243,273,304,334][m - 1]
-                + d
-                + ((m > 2 && ((y % 4 === 0 && y % 100 !== 0) || y % 400 === 0)) ? 1 : 0)
-            );
-        }
+            // תוויות ו-max לטופס טטרה → רגיל
+            const maxH = cfg.time.tetraHoursPerDay    - 1;
+            const maxM = cfg.time.tetraMinutesPerHour - 1;
+            const maxS = cfg.time.tetraSecondsPerMinute - 1;
+            document.getElementById('lblTetraHour').innerText = `שעה (0-${maxH})`;
+            document.getElementById('lblTetraMin').innerText  = `דקות (0-${maxM})`;
+            document.getElementById('lblTetraSec').innerText  = `שניות (0-${maxS})`;
+            document.getElementById('tetraHour').max = maxH;
+            document.getElementById('tetraMin').max  = maxM;
+            document.getElementById('tetraSec').max  = maxS;
 
-        // Convert an absolute day count back to {d, m, y} Gregorian
-        function julianToGregorian(abs) {
-            // Using the algorithm for proleptic Gregorian calendar
-            let z = abs;
-            let n400 = Math.floor((z - 1) / 146097); z -= n400 * 146097;
-            let n100 = Math.floor((z - 1) / 36524);  if (n100 > 3) n100 = 3; z -= n100 * 36524;
-            let n4   = Math.floor((z - 1) / 1461);   z -= n4   * 1461;
-            let n1   = Math.floor((z - 1) / 365);     if (n1   > 3) n1   = 3; z -= n1   * 365;
+            // placeholder שנה בממיר תאריך
+            document.getElementById('tDateYear').placeholder = String(cfg.epoch.tY);
 
-            const year = n400 * 400 + n100 * 100 + n4 * 4 + n1 + 1;
-            const leap = ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
-            const daysInMonth = [31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
-            let month = 0;
-            while (month < 12 && z > daysInMonth[month]) { z -= daysInMonth[month]; month++; }
-            return { d: z, m: month + 1, y: year };
-        }
-
-        // Gregorian total seconds → Tetraist {h, m, s}
-        function gregSecsToTetra(totalGregSecs) {
-            const GREG_DAY_SECS  = 86400;
-            const TETRA_DAY_UNITS = cfg.time.tetraHoursPerDay
-                                  * cfg.time.tetraMinutesPerHour
-                                  * cfg.time.tetraSecondsPerMinute; // 100000
-            const tetraUnits = Math.round((totalGregSecs / GREG_DAY_SECS) * TETRA_DAY_UNITS);
-            const h = Math.floor(tetraUnits / (cfg.time.tetraMinutesPerHour * cfg.time.tetraSecondsPerMinute));
-            const rem = tetraUnits % (cfg.time.tetraMinutesPerHour * cfg.time.tetraSecondsPerMinute);
-            const m = Math.floor(rem / cfg.time.tetraSecondsPerMinute);
-            const s = rem % cfg.time.tetraSecondsPerMinute;
-            return { h, m, s };
-        }
-
-        // Tetraist total units → Gregorian {h, m, s}
-        function tetraUnitsToGreg(totalTetraUnits) {
-            const TETRA_DAY_UNITS = cfg.time.tetraHoursPerDay
-                                  * cfg.time.tetraMinutesPerHour
-                                  * cfg.time.tetraSecondsPerMinute;
-            const totalSecs = Math.round((totalTetraUnits / TETRA_DAY_UNITS) * 86400);
-            const h = Math.floor(totalSecs / 3600);
-            const m = Math.floor((totalSecs % 3600) / 60);
-            const s = totalSecs % 60;
-            return { h, m, s };
-        }
-
-        // Async wrapper kept for API compatibility
-        function loadTetraConfig() {
-            return Promise.resolve(cfg);
-        }
-
-        // ===== APP LOGIC =====
-        loadTetraConfig().then(function(cfg) {
-
+            // ── מצב אפליקציה ────────────────────────────────────────────
             let currentViewDate  = new Date();
             let selectedDate     = null;
             let selectedTetraStr = "";
             let savedDates       = JSON.parse(localStorage.getItem('saved_tetra_dates_v3') || '[]');
 
-            function downloadThisFile() {
-                const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-                const blob = new Blob([htmlContent], { type: 'text/html' });
-                const url  = window.URL.createObjectURL(blob);
-                const a    = document.createElement('a');
-                a.style.display = 'none';
-                a.href     = url;
-                a.download = 'tetra_calendar.html';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            }
-
+            // ── המרת תאריך גרגוריאני → טטרה ────────────────────────────
             function convertToTetra(date) {
                 const targetAbs = getAbsoluteDays(date.getDate(), date.getMonth() + 1, date.getFullYear());
                 const syncAbs   = getAbsoluteDays(cfg.epoch.gD, cfg.epoch.gM, cfg.epoch.gY);
@@ -390,7 +296,7 @@
                         if (diff >= days) { diff -= days; y++; } else break;
                     }
                 } else {
-                    while (diff < 0) { y--; diff += (isLeapYear(y) ? 366 : 365); }
+                    while (diff < 0) { y--; diff += isLeapYear(y) ? 366 : 365; }
                 }
 
                 if (diff < 360) {
@@ -402,6 +308,7 @@
                 return `יום ${cfg.extraNames[extraIdx] || 'אחרית'}, ${y}`;
             }
 
+            // ── לוח שנה ─────────────────────────────────────────────────
             function renderCalendar() {
                 const daysContainer = document.getElementById('calendarDays');
                 const title         = document.getElementById('calendarTitle');
@@ -416,20 +323,19 @@
                 const prevMonthDays = new Date(year, month, 0).getDate();
 
                 for (let i = firstDay - 1; i >= 0; i--) {
-                    const dayDiv = document.createElement('div');
-                    dayDiv.className  = 'calendar-day other-month';
-                    dayDiv.innerText  = prevMonthDays - i;
-                    daysContainer.appendChild(dayDiv);
+                    const d = document.createElement('div');
+                    d.className = 'calendar-day other-month';
+                    d.innerText = prevMonthDays - i;
+                    daysContainer.appendChild(d);
                 }
-
                 for (let i = 1; i <= daysInMonth; i++) {
-                    const dayDiv   = document.createElement('div');
-                    const isToday  = new Date().toDateString() === new Date(year, month, i).toDateString();
+                    const d          = document.createElement('div');
+                    const isToday    = new Date().toDateString() === new Date(year, month, i).toDateString();
                     const isSelected = selectedDate && selectedDate.toDateString() === new Date(year, month, i).toDateString();
-                    dayDiv.className = `calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`;
-                    dayDiv.innerText = i;
-                    dayDiv.onclick   = () => selectDate(year, month, i);
-                    daysContainer.appendChild(dayDiv);
+                    d.className = `calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`;
+                    d.innerText = i;
+                    d.onclick   = () => selectDate(year, month, i);
+                    daysContainer.appendChild(d);
                 }
             }
 
@@ -451,13 +357,12 @@
 
                 document.getElementById('tetraResultDisplay').innerText = selectedTetraStr;
                 document.getElementById('saveBtn').disabled = false;
-
-                const formattedDate = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                document.getElementById('datePicker').value = formattedDate;
-
+                document.getElementById('datePicker').value =
+                    `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                 renderCalendar();
             }
 
+            // ── מחסן ────────────────────────────────────────────────────
             function openSaveModal() {
                 document.getElementById('nameModal').style.display = 'flex';
                 document.getElementById('saveNameInput').value = '';
@@ -470,11 +375,10 @@
 
             function confirmSave(noName = false) {
                 if (!selectedDate) return;
-                const inputName = document.getElementById('saveNameInput').value.trim();
-                const dateName  = noName ? "" : inputName;
-                const entry     = {
+                const name  = noName ? "" : document.getElementById('saveNameInput').value.trim();
+                const entry = {
                     id:        Date.now(),
-                    name:      dateName,
+                    name,
                     gregorian: `${selectedDate.getDate()}/${selectedDate.getMonth()+1}/${selectedDate.getFullYear()}`,
                     tetra:     selectedTetraStr
                 };
@@ -488,17 +392,14 @@
             function renderStorage() {
                 const list = document.getElementById('storageList');
                 list.innerHTML = '';
-
                 if (savedDates.length === 0) {
                     list.innerHTML = `
                         <div class="flex flex-col items-center justify-center py-12 opacity-20">
                             <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2 2H6a2 2 0 01-2-2m16 0l-8 8-8-8"></path></svg>
                             <span class="mt-2 font-bold">המחסן ריק</span>
-                        </div>
-                    `;
+                        </div>`;
                     return;
                 }
-
                 savedDates.forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'storage-item p-4 bg-slate-50 border border-slate-100 rounded-2xl flex justify-between items-center group hover:border-indigo-200 transition';
@@ -515,8 +416,7 @@
                             <button onclick="deleteItem(${item.id})" class="p-2 bg-white rounded-lg border border-slate-200 text-slate-300 hover:text-red-500 hover:border-red-500 transition">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
-                        </div>
-                    `;
+                        </div>`;
                     list.appendChild(div);
                 });
             }
@@ -536,32 +436,33 @@
             }
 
             function copyToClipboard(text) {
-                const el = document.createElement('textarea');
-                el.value = text;
-                document.body.appendChild(el);
-                el.select();
-                document.execCommand('copy');
-                document.body.removeChild(el);
+                navigator.clipboard.writeText(text).catch(() => {
+                    const el = document.createElement('textarea');
+                    el.value = text;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                });
                 showToast("הועתק ללוח!");
             }
 
             function showToast(msg) {
-                const toast  = document.getElementById('toast');
-                toast.innerText = msg;
+                const toast = document.getElementById('toast');
+                toast.innerText    = msg;
                 toast.style.opacity = '1';
                 setTimeout(() => toast.style.opacity = '0', 2000);
             }
 
-            // ===== ממיר שעות =====
-            let currentTimeTab = 'toTetra';
-
+            // ── ממיר שעות ───────────────────────────────────────────────
             function setTimeTab(tab) {
-                currentTimeTab = tab;
                 document.getElementById('formToTetra').classList.toggle('hidden', tab !== 'toTetra');
                 document.getElementById('formToGreg').classList.toggle('hidden', tab !== 'toGreg');
-                document.getElementById('tabToTetra').className = `flex-1 py-2 rounded-xl text-sm font-bold transition-all ${tab === 'toTetra' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400'}`;
-                document.getElementById('tabToGreg').className  = `flex-1 py-2 rounded-xl text-sm font-bold transition-all ${tab === 'toGreg'  ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400'}`;
-                document.getElementById('timeResult').innerText = 'הכנס שעה';
+                document.getElementById('tabToTetra').className =
+                    `flex-1 py-2 rounded-xl text-sm font-bold transition-all ${tab === 'toTetra' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400'}`;
+                document.getElementById('tabToGreg').className =
+                    `flex-1 py-2 rounded-xl text-sm font-bold transition-all ${tab === 'toGreg' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400'}`;
+                document.getElementById('timeResult').innerText      = 'הכנס שעה';
                 document.getElementById('timeResultLabel').innerText = tab === 'toTetra' ? 'שעה טטראיסטית' : 'שעה רגילה';
             }
 
@@ -574,7 +475,7 @@
                 const fM = isNaN(m) ? 0 : Math.min(Math.max(m, 0), 59);
                 const fS = isNaN(s) ? 0 : Math.min(Math.max(s, 0), 59);
                 const t  = gregSecsToTetra(fH * 3600 + fM * 60 + fS);
-                document.getElementById('timeResult').innerText = `${t.h}:${pad(t.m)}:${pad(t.s)}`;
+                document.getElementById('timeResult').innerText      = `${t.h}:${pad(t.m)}:${pad(t.s)}`;
                 document.getElementById('timeResultLabel').innerText = 'שעה טטראיסטית';
             }
 
@@ -583,11 +484,14 @@
                 const m = parseInt(document.getElementById('tetraMin').value);
                 const s = parseInt(document.getElementById('tetraSec').value);
                 if (isNaN(h) && isNaN(m) && isNaN(s)) { document.getElementById('timeResult').innerText = 'הכנס שעה'; return; }
-                const fH = isNaN(h) ? 0 : Math.min(Math.max(h, 0), cfg.time.tetraHoursPerDay - 1);
-                const fM = isNaN(m) ? 0 : Math.min(Math.max(m, 0), cfg.time.tetraMinutesPerHour - 1);
-                const fS = isNaN(s) ? 0 : Math.min(Math.max(s, 0), cfg.time.tetraSecondsPerMinute - 1);
-                const g  = tetraUnitsToGreg(fH * cfg.time.tetraMinutesPerHour * cfg.time.tetraSecondsPerMinute + fM * cfg.time.tetraSecondsPerMinute + fS);
-                document.getElementById('timeResult').innerText = `${pad(g.h)}:${pad(g.m)}:${pad(g.s)}`;
+                const fH = isNaN(h) ? 0 : Math.min(Math.max(h, 0), maxH);
+                const fM = isNaN(m) ? 0 : Math.min(Math.max(m, 0), maxM);
+                const fS = isNaN(s) ? 0 : Math.min(Math.max(s, 0), maxS);
+                const g  = tetraUnitsToGreg(
+                    fH * cfg.time.tetraMinutesPerHour * cfg.time.tetraSecondsPerMinute +
+                    fM * cfg.time.tetraSecondsPerMinute + fS
+                );
+                document.getElementById('timeResult').innerText      = `${pad(g.h)}:${pad(g.m)}:${pad(g.s)}`;
                 document.getElementById('timeResultLabel').innerText = 'שעה רגילה (גרגוריאנית)';
             }
 
@@ -600,7 +504,7 @@
                 convertGregToTetra();
             }
 
-            // ===== ממיר תאריך טטרה ← גרגוריאני =====
+            // ── ממיר תאריך טטרה → גרגוריאני ────────────────────────────
             function convertTetraDateToGreg() {
                 const tDay   = parseInt(document.getElementById('tDateDay').value);
                 const tMonth = parseInt(document.getElementById('tDateMonth').value);
@@ -610,44 +514,41 @@
                 if (isNaN(tDay) || isNaN(tMonth) || isNaN(tYear)) { el.innerText = 'הכנס תאריך'; return; }
                 if (tMonth < 1 || tMonth > 12 || tDay < 1 || tDay > 30) { el.innerText = 'תאריך לא תקין'; return; }
 
-                const epochTetraAbs = getAbsoluteDays(cfg.epoch.gD, cfg.epoch.gM, cfg.epoch.gY);
+                const epochAbs = getAbsoluteDays(cfg.epoch.gD, cfg.epoch.gM, cfg.epoch.gY);
+                let daysDiff   = 0;
+                let y          = cfg.epoch.tY;
 
-                let daysDiff = 0;
-                let y = cfg.epoch.tY;
-                if (tYear > y) {
-                    while (y < tYear) { daysDiff += isLeapYear(y) ? 366 : 365; y++; }
-                } else if (tYear < y) {
-                    while (y > tYear) { y--; daysDiff -= isLeapYear(y) ? 366 : 365; }
-                }
+                if (tYear > y)      { while (y < tYear) { daysDiff += isLeapYear(y) ? 366 : 365; y++; } }
+                else if (tYear < y) { while (y > tYear) { y--; daysDiff -= isLeapYear(y) ? 366 : 365; } }
+
                 daysDiff += (tMonth - 1) * 30 + (tDay - 1);
-                daysDiff -= ((cfg.epoch.tM - 1) * 30 + (cfg.epoch.tD - 1));
+                daysDiff -= (cfg.epoch.tM - 1) * 30 + (cfg.epoch.tD - 1);
 
-                const gDate = julianToGregorian(epochTetraAbs + daysDiff);
+                const gDate = julianToGregorian(epochAbs + daysDiff);
                 el.innerText = `${gDate.d} ב${cfg.gregMonths[gDate.m - 1]}, ${gDate.y}`;
             }
 
-            // חשיפה גלובלית
-            window.changeMonth          = changeMonth;
-            window.handlePickerChange   = handlePickerChange;
-            window.openSaveModal        = openSaveModal;
-            window.closeModal           = closeModal;
-            window.confirmSave          = confirmSave;
-            window.clearStorage         = clearStorage;
-            window.copyToClipboard      = copyToClipboard;
-            window.deleteItem           = deleteItem;
-            window.setTimeTab           = setTimeTab;
-            window.convertGregToTetra   = convertGregToTetra;
-            window.convertTetraToGreg   = convertTetraToGreg;
-            window.useCurrentTime       = useCurrentTime;
+            // ── חשיפה גלובלית ───────────────────────────────────────────
+            window.changeMonth            = changeMonth;
+            window.handlePickerChange     = handlePickerChange;
+            window.openSaveModal          = openSaveModal;
+            window.closeModal             = closeModal;
+            window.confirmSave            = confirmSave;
+            window.clearStorage           = clearStorage;
+            window.copyToClipboard        = copyToClipboard;
+            window.deleteItem             = deleteItem;
+            window.setTimeTab             = setTimeTab;
+            window.convertGregToTetra     = convertGregToTetra;
+            window.convertTetraToGreg     = convertTetraToGreg;
+            window.useCurrentTime         = useCurrentTime;
             window.convertTetraDateToGreg = convertTetraDateToGreg;
-            window.downloadThisFile     = downloadThisFile;
 
-            // אתחול
+            // ── אתחול ───────────────────────────────────────────────────
             renderCalendar();
             renderStorage();
             const today = new Date();
-            const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            document.getElementById('datePicker').value = formattedToday;
+            document.getElementById('datePicker').value =
+                `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
         });
     </script>
 </body>

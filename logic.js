@@ -19,28 +19,44 @@
  *       // pure helpers (getAbsoluteDays, isLeapYear …) are available globally
  *     });
  *   </script>
+ *
+ * Usage when logic.js and logic.json are in a parent/sibling folder:
+ *   <script src="../logic.js"></script>
+ *   <script>
+ *     loadTetraConfig('../logic.json').then(cfg => { … });
+ *   </script>
  */
 
 /* ─── Config loader ──────────────────────────────────────────────── */
 
 /**
- * Fetches logic.json (relative to the page) and caches the result in
- * window.TETRA_CONFIG.  Safe to call multiple times — subsequent calls
- * return the cache immediately.
+ * Fetches logic.json and caches the result in window.TETRA_CONFIG.
+ * Safe to call multiple times — subsequent calls return the cache immediately.
  *
- * The resolved object exposes every field in logic.json directly, plus
- * two convenience helpers derived from the data:
- *   cfg.historicalExtraHolidaysSet  — Set of extra-day indices that are holidays
- *   cfg.tetraYearOffset             — numeric offset (epoch.tY − epoch.gY)
+ * @param {string} [configPath]  Optional explicit URL/path to logic.json.
+ *   Pass this when logic.js and logic.json live in a different directory
+ *   from the HTML page (e.g. loadTetraConfig('../logic.json')).
+ *   If omitted, the path is inferred from the <script src> attribute.
  *
  * @returns {Promise<Object>}
  */
-function loadTetraConfig() {
+function loadTetraConfig(configPath) {
     if (window.TETRA_CONFIG) return Promise.resolve(window.TETRA_CONFIG);
 
-    return fetch('logic.json')
+    /* Resolve the URL for logic.json:
+       1. Use explicit configPath if provided by caller.
+       2. Auto-detect from the <script src> that loaded this file.
+       3. Fall back to same directory as the page. */
+    let url = configPath || null;
+    if (!url) {
+        const scripts = Array.from(document.querySelectorAll('script[src]'));
+        const me = scripts.find(s => s.src.includes('logic.js'));
+        url = me ? me.src.replace(/\/[^/]*$/, '/') + 'logic.json' : 'logic.json';
+    }
+
+    return fetch(url)
         .then(r => {
-            if (!r.ok) throw new Error(`logic.json not found (${r.status})`);
+            if (!r.ok) throw new Error(`logic.json not found at ${url} (${r.status})`);
             return r.json();
         })
         .then(data => {
@@ -101,26 +117,19 @@ function julianToGregorian(jd) {
 /**
  * Returns whether a Tetra year is a leap year.
  *
- * The mapping tetraYear → Gregorian year is determined by the epoch offset
- * stored in logic.json (epoch.tY − epoch.gY, typically 10000).
- * If the config is not yet loaded the function falls back to the standard offset.
- *
  * @param {number} tetraYear  e.g. 12026
  * @returns {boolean}
  */
 function isLeapYear(tetraYear) {
     const offset = (window.TETRA_CONFIG)
         ? window.TETRA_CONFIG.tetraYearOffset
-        : 10000;                       /* safe fallback — matches default logic.json */
+        : 10000;
     const gY = tetraYear - offset;
     return (gY % 4 === 0 && gY % 100 !== 0) || (gY % 400 === 0);
 }
 
 /**
  * Converts regular (Gregorian) seconds-since-midnight to Tetra time components.
- *
- * Tetra day = tetraHoursPerDay × tetraMinutesPerHour × tetraSecondsPerMinute units.
- * All three constants come from logic.json → time.
  *
  * @param {number} totalGregSec  seconds since midnight (0 – 86 399)
  * @returns {{ h: number, m: number, s: number }}
