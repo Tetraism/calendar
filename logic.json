@@ -12,10 +12,10 @@
 
   "time": {
     "gregSecondsPerDay":      86400,
-    "tetraUnitsPerDay":      100000,
-    "tetraHoursPerDay":          10,
-    "tetraMinutesPerHour":      100,
-    "tetraSecondsPerMinute":    100,
+    "tetraUnitsPerDay":      248832,
+    "tetraHoursPerDay":          12,
+    "tetraMinutesPerHour":      144,
+    "tetraSecondsPerMinute":    144,
     "analogClockHours":          12
   },
 
@@ -64,6 +64,12 @@
       "desc": "לציון פרסום Principia Mathematica (1687) — מאת אייזק ניוטון. הספר ניסח את שלושת חוקי התנועה ואת חוק הכבידה האוניברסלי, ויצר את הבסיס למכניקה הקלאסית."
     }
   ],
+
+  "version": "2.2.0",
+
+  "ui": {
+    "hourAbbr": "ש'"
+  },
 
   "historicalExtraHolidays": [3],
   "aristoHoliday": {

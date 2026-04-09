@@ -1583,7 +1583,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         <footer class="mt-16 mb-8 py-6 border-t text-center text-gray-500">
             <div class="flex flex-col items-center gap-1">
                 <p class="text-sm font-medium">© Tetraism Time Management System</p>
-                <p class="text-xs opacity-75 font-mono">גרס 2.2.0 </p>
+                <p id="appVersion" class="text-xs opacity-75 font-mono"></p>
             </div>
         </footer>
     </div>
@@ -1868,7 +1868,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
                 list.innerHTML = '';
                 for (let h = 0; h < cfg.time.tetraHoursPerDay; h++) {
-                    list.innerHTML += `<div class="mb-3 flex gap-3 items-center"><div class="w-10 text-xs font-bold text-blue-600">ש' ${h}</div><input class="flex-grow p-2 border rounded-lg text-sm text-right" data-hour="${h}" value="${dayTasks[h]||''}"></div>`;
+                    list.innerHTML += `<div class="mb-3 flex gap-3 items-center"><div class="w-10 text-xs font-bold text-blue-600">${cfg.ui.hourAbbr} ${h}</div><input class="flex-grow p-2 border rounded-lg text-sm text-right" data-hour="${h}" value="${dayTasks[h]||''}"></div>`;
                 }
                 document.getElementById('scheduleModal').classList.add('active');
             }
@@ -1933,6 +1933,9 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             window.exportFullFile   = exportFullFile;
 
             function startup() {
+                const verEl = document.getElementById('appVersion');
+                if (verEl) verEl.innerText = `גרס ${cfg.version}`;
+
                 currentYear = calculateCurrentTetraYear();
                 initSettingsUI();
                 initClockFace();
