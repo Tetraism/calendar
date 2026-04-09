@@ -2,6 +2,12 @@
  * logic.js — Tetraism shared date & time logic
  * Used by: index.html (main calendar), conventor.html, and any future consumer.
  *
+ * ⚠️  PUBLIC API — קובץ זה הוא ממשק ציבורי משותף.
+ *     דפים ורכיבים רבים תלויים בו ישירות.
+ *     כל שינוי בחתימות הפונקציות, בשמות, או בהתנהגות —
+ *     עלול לשבור צרכנים קיימים ללא התראה.
+ *     לפני כל שינוי: עדכן את כל הצרכנים הידועים ובדוק תאימות לאחור.
+ *
  * ★ Zero hardcoded data. Every constant lives in logic.json.
  *   Change logic.json → every page that includes this file updates automatically.
  *

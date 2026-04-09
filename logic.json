@@ -1,6 +1,8 @@
 {
   "_comment": "Tetraism calendar — single source of truth. Edit here; logic.js and every consumer updates automatically.",
 
+  "_warning": "⚠️ PUBLIC API — קובץ זה הוא מקור הנתונים הציבורי המשותף. דפים ורכיבים רבים טוענים אותו ישירות דרך logic.js. כל שינוי במפתחות, בשמות שדות, או במבנה — עלול לשבור צרכנים קיימים ללא התראה. לפני כל שינוי: עדכן את כל הצרכנים הידועים ובדוק תאימות לאחור.",
+
   "epoch": {
     "gD": 1,
     "gM": 1,
