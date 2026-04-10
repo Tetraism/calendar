@@ -137,11 +137,21 @@ function isLeapYear(tetraYear) {
 function gregSecsToTetra(totalGregSec) {
     const t = (window.TETRA_CONFIG) ? window.TETRA_CONFIG.time : null;
     const gregPerDay  = t ? t.gregSecondsPerDay  : 86400;
-    const tetraPerDay = t ? t.tetraUnitsPerDay   : 100000;
-    const mPerH       = t ? t.tetraMinutesPerHour : 100;
-    const sPerM       = t ? t.tetraSecondsPerMinute : 100;
+    const tetraPerDay = t ? t.tetraUnitsPerDay   : 248832;
+    const mPerH       = t ? t.tetraMinutesPerHour : 144;
+    const sPerM       = t ? t.tetraSecondsPerMinute : 144;
+    const offsetTetra = t ? (t.tetraTimeOffset || 0) : 0;
 
-    const totalTetra = Math.round(totalGregSec * tetraPerDay / gregPerDay);
+    let totalTetra = Math.round(totalGregSec * tetraPerDay / gregPerDay);
+    
+    // הסטה: כאשר totalTetra היה 3:18:86 (64886 יחידות), עכשיו יהיה 0:000:000
+    totalTetra = totalTetra - offsetTetra;
+    
+    // אם התוצאה שלילית, הוסף יום עשרוני שלם
+    if (totalTetra < 0) {
+        totalTetra += tetraPerDay;
+    }
+    
     return {
         h: Math.floor(totalTetra / (mPerH * sPerM)),
         m: Math.floor((totalTetra % (mPerH * sPerM)) / sPerM),
@@ -158,9 +168,18 @@ function gregSecsToTetra(totalGregSec) {
 function tetraUnitsToGreg(totalTetra) {
     const t = (window.TETRA_CONFIG) ? window.TETRA_CONFIG.time : null;
     const gregPerDay  = t ? t.gregSecondsPerDay  : 86400;
-    const tetraPerDay = t ? t.tetraUnitsPerDay   : 100000;
+    const tetraPerDay = t ? t.tetraUnitsPerDay   : 248832;
+    const offsetTetra = t ? (t.tetraTimeOffset || 0) : 0;
 
-    const totalGregSec = Math.round(totalTetra * gregPerDay / tetraPerDay);
+    // הוסף את ההסטה בחזרה לפני ההמרה לגרגוריאני
+    let adjustedTetra = totalTetra + offsetTetra;
+    
+    // אם חרגנו מעבר ליום, החזר ליום הבא
+    if (adjustedTetra >= tetraPerDay) {
+        adjustedTetra -= tetraPerDay;
+    }
+
+    const totalGregSec = Math.round(adjustedTetra * gregPerDay / tetraPerDay);
     return {
         h: Math.floor(totalGregSec / 3600),
         m: Math.floor((totalGregSec % 3600) / 60),

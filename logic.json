@@ -18,7 +18,9 @@
     "tetraHoursPerDay":          12,
     "tetraMinutesPerHour":      144,
     "tetraSecondsPerMinute":    144,
-    "analogClockHours":          12
+    "analogClockHours":          12,
+    "tetraTimeOffset":         64886,
+    "_offsetComment": "הסטת זמן: כאשר הזמן העשרוני המקורי היה 3:18:86, עכשיו הוא 0:000:000 (= 3×20736 + 18×144 + 86 = 64886 יחידות)"
   },
 
   "tetraMonths": [
