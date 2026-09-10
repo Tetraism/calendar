@@ -1814,7 +1814,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                         const isToday      = key === todayKey;
                         const dayOfWeek    = ((d - 1) % 12) + 1;
                         const isHoliday    = config.holidays.includes(dayOfWeek);
-                        const isHistorical = cfg.historicalHolidays.some(h => h.mIdx === mIdx && h.day === d);
+                        const isHistorical = cfg.historicalHolidays.some(h => h.mIdx === mIdx && d >= h.day && d < h.day + (h.days || 1));
                         const hasTasks     = savedData[key] && Object.keys(savedData[key]).length > 0;
 
                         html += `<div onclick="openDay(${currentYear}, ${mIdx}, ${d})" class="day-card ${isToday ? 'is-today' : ''} ${hasTasks ? 'has-tasks' : ''} ${isHistorical ? 'is-historical-holiday' : ''} ${isHoliday ? 'is-holiday-day' : ''}">
@@ -1860,13 +1860,13 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                         foundHoliday = { name: cfg.aristoHoliday.name, desc: cfg.aristoHoliday.desc };
                     }
                 } else {
-                    const h = cfg.historicalHolidays.find(h => h.mIdx === m && h.day === d);
+                    const h = cfg.historicalHolidays.find(h => h.mIdx === m && d >= h.day && d < h.day + (h.days || 1));
                     if (h) foundHoliday = { name: h.name, desc: h.desc };
                 }
 
                 if (foundHoliday) {
                     bannerTitle.innerText = foundHoliday.name;
-                    bannerDesc.innerText  = foundHoliday.desc;
+                    bannerDesc.innerHTML  = foundHoliday.desc;
                     banner.classList.remove('hidden');
                 } else {
                     banner.classList.add('hidden');
