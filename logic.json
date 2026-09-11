@@ -1,7 +1,7 @@
 {
   "_comment": "Tetraism calendar — single source of truth. Edit here; logic.js and every consumer updates automatically.",
 
-  "_warning": "⚠️ PUBLIC API — קובץ זה הוא מקור הנתונים הציבורי המשותף. דפים ורכיבים רבים טוענים אותו ישירות דרך logic.js. כל שינוי במפתחות, בשמות שדות, או במבנה — עלול לשבור צרכנים קיימים ללא התראה. לפני כל שינוי: עדכן את כל הצרכנים הידועים ובדוק תאימות לאחור.",
+  "_warning": "⚠️ PUBLIC API — this file is the shared public data source. Many pages and components load it directly via logic.js. Any change to keys, field names, or structure may break existing consumers without warning. Before making any change: update all known consumers and check backward compatibility.",
 
   "epoch": {
     "gD": 13,
@@ -20,13 +20,13 @@
     "tetraSecondsPerMinute":    144,
     "analogClockHours":          12,
     "tetraTimeOffset":         64886,
-    "_offsetComment": "הסטת זמן: כאשר הזמן העשרוני המקורי היה 3:18:86, עכשיו הוא 0:000:000 (= 3×20736 + 18×144 + 86 = 64886 יחידות)"
+    "_offsetComment": "Time offset: what was originally decimal time 3:18:86 is now 0:000:000 (= 3×20736 + 18×144 + 86 = 64886 units)"
   },
 
   "tetraMonths": [
-    "ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי",
-    "שביעי", "שמיני", "תשיעי", "עשירי", "אחד-עשר", "שנים-עשר",
-    "שלושה-עשר", "ארבעה-עשר", "חמישה-עשר"
+    "First", "Second", "Third", "Fourth", "Fifth", "Sixth",
+    "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth",
+    "Thirteenth", "Fourteenth", "Fifteenth"
   ],
 
   "manesiNames": [
@@ -37,8 +37,8 @@
   ],
 
   "gregMonths": [
-    "ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני",
-    "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ],
 
   "weekDayLabels": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
@@ -47,71 +47,71 @@
   "defaultManesis":   true,
 
   "specialDays":      ["α", "β", "γ", "δ", "ε", "Telade"],
-  "specialDayLabels": ["אחרית 1", "אחרית 2", "אחרית 3", "אחרית 4", "אחרית 5", "אחרית ¼"],
-  "extraNames":       ["אלפא", "בטא", "גמא", "דלתא", "אפסילון", "טלאד"],
+  "specialDayLabels": ["Epilogue 1", "Epilogue 2", "Epilogue 3", "Epilogue 4", "Epilogue 5", "Epilogue ¼"],
+  "extraNames":       ["Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Telade"],
 
   "historicalHolidays": [
     {
       "mIdx": 13,
       "day":  5,
-      "name": "🔭 יום איינשטיין — יחסות כללית",
-      "desc": "לציון הצגת משוואות השדה של תורת היחסות הכללית (25 בנובמבר 1915) — מאת אלברט איינשטיין. התיאוריה מתארת כבידה כעקמומיות של המרחב-זמן ושינתה את יסודות הפיזיקה המודרנית."
+      "name": "🔭 Einstein Day — General Relativity",
+      "desc": "Marking the presentation of the field equations of general relativity (November 25, 1915) — by Albert Einstein. The theory describes gravity as the curvature of spacetime and transformed the foundations of modern physics."
     },
     {
       "mIdx": 7,
       "day":  3,
       "days": 10,
-      "name": "🍎 יום ניוטון",
-      "desc": "לציון פרסום Principia Mathematica (5 ביולי 1687) — מאת אייזק ניוטון. הספר ניסח את שלושת חוקי התנועה ואת חוק הכבידה האוניברסלי, ויצר את הבסיס למכניקה הקלאסית."
+      "name": "🍎 Newton Day",
+      "desc": "Marking the publication of Principia Mathematica (July 5, 1687) — by Isaac Newton. The book formulated the three laws of motion and the law of universal gravitation, laying the foundation for classical mechanics."
     },
     {
       "mIdx": 2,
       "day":  9,
-      "name": "🔭 יום גלילאו",
-      "desc": "לציון פרסום Sidereus Nuncius (13 במרץ 1610) — מאת גלילאו גליליי. הספר תיאר תצפיות בטלסקופ שגילה בהן את ירחי צדק, ותמך בתאוריה ההליוצנטרית של קופרניקוס."
+      "name": "🔭 Galileo Day",
+      "desc": "Marking the publication of Sidereus Nuncius (March 13, 1610) — by Galileo Galilei. The book described telescopic observations that discovered the moons of Jupiter, supporting the Copernican heliocentric theory."
     },
     {
       "mIdx": 4,
       "day":  16,
-      "name": "🎓 יום אפלטון",
-      "desc": "לציון יום הולדתו המסורתי של אפלטון — לפי המסורת העתיקה (דיוגנס לארטיוס) נולד ביום השביעי לחודש תרגליון, יום הולדתו של אפולו (מקביל בקירוב ל-21 במאי, כ-428 לפנה\"ס). אפלטון ייסד את האקדמיה באתונה, בית המדרש הראשון להשכלה גבוהה מאורגנת במערב, ובו התחנך תלמידו אריסטו."
+      "name": "🎓 Plato Day",
+      "desc": "Marking the traditional birthday of Plato — according to ancient tradition (Diogenes Laërtius) he was born on the seventh day of the month of Thargelion, the birthday of Apollo (roughly corresponding to May 21, circa 428 BCE). Plato founded the Academy in Athens, the first institution of organized higher learning in the West, where his student Aristotle was educated."
     },
     {
       "mIdx": 13,
       "day":  3,
-      "name": "🐢 יום דרווין",
-      "desc": "לציון פרסום On the Origin of Species (24 בנובמבר 1859) — מאת צ'ארלס דרווין. הספר הציג את תאוריית האבולוציה בברירה טבעית, ושינה את ההבנה המדעית של מגוון החיים על כדור הארץ."
+      "name": "🐢 Darwin Day",
+      "desc": "Marking the publication of On the Origin of Species (November 24, 1859) — by Charles Darwin. The book presented the theory of evolution by natural selection, transforming the scientific understanding of the diversity of life on Earth."
     },
     {
       "mIdx": 14,
       "day":  11,
-      "name": "☢️ יום מארי קירי",
-      "desc": "לציון גילוי הרדיום (26 בדצמבר 1898) — מאת מארי קירי, יחד עם בעלה פייר. מארי קירי הייתה האישה הראשונה שזכתה בפרס נובל, והראשונה שזכתה בשני פרסי נובל בשני תחומי מדע שונים — פיזיקה וכימיה."
+      "name": "☢️ Marie Curie Day",
+      "desc": "Marking the discovery of radium (December 26, 1898) — by Marie Curie, together with her husband Pierre. Marie Curie was the first woman to win a Nobel Prize, and the first person to win two Nobel Prizes in two different fields of science — physics and chemistry."
     },
     {
       "mIdx": 9,
       "day":  19,
-      "name": "🧫 יום פלמינג",
-      "desc": "לציון גילוי הפניצילין (3 בספטמבר 1928) — מאת אלכסנדר פלמינג. החוקר הבריטי גילה בטעות זאת האנטיביוטיקה הראשונה, שהציצה מהפכה רפואית וחסכה מיליוני חיים."
+      "name": "🧫 Fleming Day",
+      "desc": "Marking the discovery of penicillin (September 3, 1928) — by Alexander Fleming. The British researcher accidentally discovered the first antibiotic, which sparked a medical revolution and saved millions of lives."
     },
     {
       "mIdx": 2,
       "day":  14,
       "days": 3,
-      "name": "📐 יום ארכימדס",
-      "desc": "<p>לציון יום ה-π — 3 ימים, כמספר השלם הקרוב ביותר לקבוע π.</p><p>ארכימדס מסירקוזה קירב את π, גילה את חוק העילוף (\"אאוריקה!\") וחישב שטחים ונפחים באמצעות שיטת המיצוי, מאבות המכניקה והמתמטיקה של העת העתיקה.</p>"
+      "name": "📐 Archimedes Day",
+      "desc": "<p>Marking Pi Day — 3 days, as the nearest whole number to the constant π.</p><p>Archimedes of Syracuse approximated π, discovered the principle of buoyancy (\"Eureka!\"), and calculated areas and volumes using the method of exhaustion, one of the founding fathers of mechanics and mathematics in antiquity.</p>"
     }
   ],
 
   "version": "2.2.0",
 
   "ui": {
-    "hourAbbr": "ש'"
+    "hourAbbr": "h"
   },
 
   "historicalExtraHolidays": [3],
   "aristoHoliday": {
-    "name": "🏛️ יום אריסטו",
-    "desc": "לציון יום הולדתו של אריסטו (384 לפנה\"ס) — פילוסוף יווני, אבי הלוגיקה, הביולוגיה, הפיזיקה ועוד. תלמידו של אפלטון ומורו של אלכסנדר הגדול."
+    "name": "🏛️ Aristotle Day",
+    "desc": "Marking the birthday of Aristotle (384 BCE) — a Greek philosopher, father of logic, biology, physics, and more. Student of Plato and teacher of Alexander the Great."
   }
 }
